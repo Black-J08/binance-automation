@@ -10,8 +10,10 @@
     "debug": "~2.6.9",
     "express": "~4.16.1",
     "express-nunjucks": "^2.2.5",
+    "firebase-admin": "^8.13.0",
     "http-errors": "~1.6.3",
     "morgan": "~1.9.1",
+    "nodemon": "^2.0.4",
     "nunjucks": "^3.2.1"
   }
 }
