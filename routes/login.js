@@ -3,7 +3,19 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/', function (req, res) {
-  res.render('login');
+  if (req.cookies.session == null) {
+    res.render('login');
+  } else {
+    const sessionCookie = req.cookies.session || '';
+    admin.auth().verifySessionCookie(
+      sessionCookie, true /** checkRevoked **/)
+      .then((decodedClaims) => {
+        res.redirect('/');
+      })
+      .catch(error => {
+        res.render('login');
+      });
+  }
 });
 
 router.post('/', function (req, res) {
@@ -11,13 +23,13 @@ router.post('/', function (req, res) {
   //Add Guard against CSRF attacks.
 
   const expiresIn = 60 * 60 * 1000;
-  admin.auth().createSessionCookie(idToken, {expiresIn})
-    .then((sessionCookie) => {      
-     const options = {maxAge: expiresIn, httpOnly: true}; //Add secure:true when deploying
-     res.cookie('session', sessionCookie, options);
-     res.end(JSON.stringify({status: 'success'}));
+  admin.auth().createSessionCookie(idToken, { expiresIn })
+    .then((sessionCookie) => {
+      const options = { maxAge: expiresIn, httpOnly: true }; //Add secure:true when deploying
+      res.cookie('session', sessionCookie, options);
+      res.end(JSON.stringify({ status: 'success' }));
     }, error => {
-     res.status(401).send('UNAUTHORIZED REQUEST!');
+      res.status(401).send('UNAUTHORIZED REQUEST!');
     });
 });
 
