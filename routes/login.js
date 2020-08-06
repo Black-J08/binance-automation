@@ -22,7 +22,7 @@ router.post('/', function (req, res) {
   const idToken = req.body.idToken;
   //Add Guard against CSRF attacks.
 
-  const expiresIn = 60 * 60 * 1000;
+  const expiresIn = 60 * 60 * 24 * 1000;
   admin.auth().createSessionCookie(idToken, { expiresIn })
     .then((sessionCookie) => {
       const options = { maxAge: expiresIn, httpOnly: true }; //Add secure:true when deploying
